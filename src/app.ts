@@ -4,7 +4,9 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
+import dbConnectionOptions from './config/mysql'
 import ApiRoutes from './routes/index';
+import {createConnection} from "typeorm";
 const app = express();
 dotenv.config();
 
@@ -30,11 +32,14 @@ app.use(function(req, res, next) {
 
 
 app.disable('x-powered-by');
-
 const port = process.env.PORT;
 
-app.listen(port, () => {
-    return console.log(`Express is listening at http://localhost:${port}`);
-});
+(async () => await createConnection(dbConnectionOptions).then(() => {
+    app.listen(port, () => {
+        console.log('DB Connection established')
+        return console.log(`Express is listening at http://localhost:${port}`);
+    });
+}))();
+
 
 export default app;
