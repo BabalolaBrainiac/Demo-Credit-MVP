@@ -2,9 +2,9 @@
   "name": "demo-credit-mvp",
   "version": "1.0.0",
   "description": "Demo Credit",
-  "main": "dist/app.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && nodemon dist/app.js --exec ts-node",
+    "start": "tsc && nodemon dist/index.js --exec ts-node",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/config/default.ts"

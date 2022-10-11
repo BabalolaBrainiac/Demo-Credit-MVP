@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,9 +8,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const helmet_1 = __importDefault(require("helmet"));
-const mysql_1 = __importDefault(require("./config/mysql"));
 const index_1 = __importDefault(require("./routes/index"));
-const typeorm_1 = require("typeorm");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 app.set('port', process.env.APP_PORT);
@@ -38,13 +27,16 @@ app.use(function (req, res, next) {
     next();
 });
 app.disable('x-powered-by');
-const port = process.env.PORT;
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    return yield (0, typeorm_1.createConnection)(mysql_1.default).then(() => {
-        app.listen(port, () => {
-            console.log('DB Connection established');
-            return console.log(`Express is listening at http://localhost:${port}`);
-        });
-    });
-}))();
+// const port = process.env.PORT;
+//
+// (async () => await createConnection(dbConnectionOptions).then(() => {
+//     app.listen(port, () => {
+//         console.log('DB Connection established')
+//         return console.log(`Express is listening at http://localhost:${port}`);
+//     });
+// })
+//         .catch((error) => {
+//             console.log('TypeOrm Connection Not Established')
+//         })
+// )();
 exports.default = app;

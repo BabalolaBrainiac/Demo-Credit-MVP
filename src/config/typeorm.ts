@@ -3,7 +3,6 @@ import config from 'config';
 import dotenv from "dotenv";
 import {Connection, ConnectionOptions, createConnection} from 'typeorm';
 
-
 let connection: Connection;
 dotenv.config();
 
@@ -17,12 +16,3 @@ const connectionOpts: ConnectionOptions = {
 };
 
 export default connectionOpts;
-
-    // const connection = await createPool({
-    //     host: process.env.MYSQL_HOST,
-    //     user: process.env.MYSQL_HOST,
-    //     port: Number(process.env.MYSQL_PORT) || 3306,
-    //     password: process.env.MYSQL_PASSWORD,
-    //     database: process.env.DB,
-    //     connectionLimit: 10
-    // })
