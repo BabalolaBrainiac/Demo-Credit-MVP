@@ -3,9 +3,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
-import dbConnectionOptions from './config/typeorm'
 import ApiRoutes from './routes/index';
-import {createConnection} from "typeorm";
 const app = express();
 dotenv.config();
 

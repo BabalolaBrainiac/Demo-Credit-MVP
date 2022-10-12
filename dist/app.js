@@ -27,16 +27,4 @@ app.use(function (req, res, next) {
     next();
 });
 app.disable('x-powered-by');
-// const port = process.env.PORT;
-//
-// (async () => await createConnection(dbConnectionOptions).then(() => {
-//     app.listen(port, () => {
-//         console.log('DB Connection established')
-//         return console.log(`Express is listening at http://localhost:${port}`);
-//     });
-// })
-//         .catch((error) => {
-//             console.log('TypeOrm Connection Not Established')
-//         })
-// )();
 exports.default = app;

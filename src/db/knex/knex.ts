@@ -1,4 +1,4 @@
-import app from './app'
+import dotenv from "dotenv";
 
 const knex = require('knex')({
     client: 'mysql2',
@@ -11,14 +11,5 @@ const knex = require('knex')({
         pool: {min: 0, max: 7}
     },
 });
-const port = process.env.PORT;
 
-knex.raw("Select Version()").then(() => {
-    const server = app.listen(port, () => {
-        console.log('DB Connection established')
-        return console.log(`Express is listening at http://localhost:${port}`);
-    });
-})
-
-module.exports = knex;
-
+export default knex;
