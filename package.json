@@ -4,7 +4,7 @@
   "description": "Demo Credit",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && nodemon dist/index.js --exec ts-node",
+    "start": "tsc && nodemon .dist/index.js nodemon .src/index.ts --exec ts-node",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/config/default.ts",
@@ -44,12 +44,14 @@
     "config": "3.3.8",
     "cookie-parser": "1.4.6",
     "dotenv": "16.0.3",
+    "express-validator": "6.14.2",
     "knex": "2.3.0",
     "log4js": "6.7.0",
     "mysql": "2.18.1",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.3.10",
     "typescript": "4.8.4",
-    "uuid": "9.0.0"
+    "uuid": "9.0.0",
+    "uuidv4": "6.2.13"
   }
 }

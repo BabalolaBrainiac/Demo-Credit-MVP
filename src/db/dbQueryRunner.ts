@@ -1,8 +1,8 @@
-import knex, {Knex} from 'knex';
+import knex from 'knex';
 import config from './knexfile';
 
 
-const configuration = config['development'];
-const db = knex(config);
+const configuration = config['development']
+const db = knex(configuration);
 
 export default db;

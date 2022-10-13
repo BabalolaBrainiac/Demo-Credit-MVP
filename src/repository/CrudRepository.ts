@@ -1,11 +1,12 @@
 export interface CrudRepository {
 
-    getSingleItem?(id: string): any;
+    deleteItemById(id: any, item: any, table: any ): Promise<any>;
 
-    getAllItem?(): Promise<any>;
+    getAllItems(item: any, table: any): Promise<any>;
 
-    updateItem(id: string, data: any): Promise<any>;
+    getSingleItemById(id: string, item: any,  tableName: string ): Promise<any>;
 
-    deleteItem(id: any): Promise<any>;
+    updateItemById(id: string, data: any, item: any): Promise<any>
+
 
 }

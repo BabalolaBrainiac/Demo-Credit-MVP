@@ -1,5 +1,5 @@
 import app from './app'
-import knex from './db/knex/knex'
+import knex from "./db/knex/knex"
 
 // const knex = require('knex')({
 //     client: 'mysql2',
