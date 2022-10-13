@@ -1,6 +1,5 @@
 import {Knex} from "knex";
 import { table } from 'node:console';
-import knex from "../knex/knex";
 
 
 export async function up(knex: Knex): Promise<void> {

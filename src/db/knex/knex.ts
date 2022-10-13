@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 
 const knex = require('knex')({
     client: 'mysql2',

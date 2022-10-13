@@ -8,10 +8,9 @@ export enum TransactionType {
 export enum TransactionStatus {
     PENDING = 'PENDING',
     IN_PROGRESS = 'IN_PROGRESS',
-    SUCCESS = 'COMPLETE',
+    COMPLETE = 'COMPLETE',
 }
 export class ITransactionDTO {
-    transactionReference: string;
     status: TransactionStatus;
     type: TransactionType;
     userId: string;
