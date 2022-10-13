@@ -38,8 +38,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
+node_modules/
 
 # TypeScript v1 declaration files
 typings/
@@ -95,7 +95,7 @@ dist
 # Serverless directories
 .serverless/
 
-# FuseBox cache
+# FuseBox cacheg
 .fusebox/
 
 # DynamoDB Local files
@@ -111,13 +111,18 @@ frontend-test
 tmp-credentials.json
 
 # Locks are managed by workspace
-backend/yarn.lock
-backend/package-lock.json
-frontend/yarn.lock
-frontend/package-lock.json
+sr/yarn.lock
+src/package-lock.json
+src/yarn.lock
+.package-lock.json
+.idea
+package.json
+tsconfig.json
+./node_modules
 .idea/dbnavigator.xml
 .idea/misc.xml
 .idea/workspace.xml
+.package.json
 
 backend/.idea
 frontend/.idea
