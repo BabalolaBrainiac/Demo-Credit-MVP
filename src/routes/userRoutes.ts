@@ -1,16 +1,24 @@
 import express, { Router } from 'express';
-// import { body, query } from 'express-validator';
-
-import {UserController} from "../controllers/userController";
-import {lookupValidator} from "../helpers/Validator";
+import {UserController} from "../controllers/userController";;
 
 const router: Router = express.Router();
 
-router.get('/getall',
-    UserController.getAllUsers )
+router.get('/get',
+    UserController.getAllUsers );
 
-router.get('/getone',
-    UserController.getSingleUser )
+router.get('/get/:userId',
+    UserController.getSingleUser );
+
+router.post('/create',
+    UserController.createNewUser );
+
+router.put('/update/:userId',
+    UserController.updateUserInfo );
+
+router.put('/delete/:userId',
+    UserController.deleteItem )
 
 
 export default router;
+
+

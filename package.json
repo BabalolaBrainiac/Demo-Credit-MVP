@@ -4,7 +4,7 @@
   "description": "Demo Credit",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && nodemon .dist/index.js nodemon .src/index.ts --exec ts-node",
+    "start": "nodemon src/index.ts",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/config/default.ts",

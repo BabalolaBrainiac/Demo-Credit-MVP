@@ -2,9 +2,9 @@ import {IExpressResponse, IResponse} from "../interfaces/IExpressReq";
 import {ErrorCode} from './ErrorCodes';
 
 
-export const HandleSuccessResponse = (data: any) => {
+export const HandleSuccessResponse = (data: any): IExpressResponse => {
     return {
-        status: data.status,
+        status: 200,
         data: data,
     };
 };
@@ -52,10 +52,19 @@ export const HandleErrorResponse = (err: any): IExpressResponse => {
         };
     }
 
+    if (err) {
+        return {
+            status: 500,
+            data: {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'An unexpected internal server error occurred',
+                data: err.stack,
+            },
+        };
+    }
     switch (code) {
-        case ErrorCode.FORBIDDEN:
-        case ErrorCode.INVALID_OTP:
-        case ErrorCode.ACCESS_RESTRICTED:
+        case ErrorCode.NOT_AVAILABLE:
+        case ErrorCode.NOT_FOUND:
             return {
                 status: 403,
                 data: {
@@ -71,13 +80,13 @@ export const HandleErrorResponse = (err: any): IExpressResponse => {
                     message: message || 'Some important parameters are missing. See documentation',
                 },
             };
-        case ErrorCode.SERVICE_UNAVAILABLE:
+        case ErrorCode.SERVER_ERROR:
         case ErrorCode.REQUEST_FAILED:
             return {
                 status: 500,
                 data: err,
             };
-        case ErrorCode.RESOURCE_NOT_FOUND:
+        case ErrorCode.NOT_FOUND:
             return {
                 status: 404,
                 data: err,

@@ -1,28 +1,48 @@
-import {CrudQuery} from "../repository/CrudQuery";
+import {UserRepository} from "../repository/userRepository";
 
-let crudQuery: CrudQuery;
 export const UserService = {
-    crudQuery: new CrudQuery(),
 
-    async getAllUsers() {
-
+    async createNewUser(user: any): Promise<any> {
         try {
-            console.log('working');
-            return {
-                data: 'Opelope anointing',
-                status: 200
-            };
-
+            return await UserRepository.createNewItem(user)
         } catch (err) {
             throw err
         }
 
     },
 
-    async getUserById(userId: any ) {
+    async getAllUsers(): Promise<any> {
         try {
-            return await crudQuery.getSingleItemById(userId, 'user')
+            return await UserRepository.getAllItems()
+        } catch (err) {
+            throw err
+        }
+    },
+
+    async getUserById(userId: any ): Promise<any> {
+        try {
+            return await UserRepository.getSingleItemById(userId)
             }
+        catch (e) {
+            throw e
+        }
+    },
+
+
+    async updateUser(userId: any, item: any ): Promise<any> {
+        const {param, value} = item;
+        try {
+            return await UserRepository.updateItem(userId, param, value)
+        }
+        catch (e) {
+            throw e
+        }
+    },
+
+    async deleteUser(userId: any ) {
+        try {
+            return await UserRepository.deleteItem(userId)
+        }
         catch (e) {
             throw e
         }

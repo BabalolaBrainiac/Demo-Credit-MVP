@@ -1,5 +1,6 @@
 require('dotenv').config();
 import type { Knex } from "knex";
+import {connectionOpts} from "../config/config";
 
 interface IKnexConfig {
   [key:string]: Knex.Config;
@@ -9,11 +10,11 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'mysql2',
     connection: {
-      host: 'localhost',
-      port: 3306,
-      user: 'root',
-      password: '256531Aj',
-      database: 'bund_services',
+      host: connectionOpts.host,
+      port: connectionOpts.port,
+      user: connectionOpts.username,
+      password: connectionOpts.password,
+      database: connectionOpts.database,
       pool: {min: 0, max: 7}
     },
     debug: true,

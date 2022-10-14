@@ -1,7 +1,7 @@
 import { LoggerFactory } from './LoggerFactory';
 
 const Logger = LoggerFactory.configure({
-    id: 'cashout',
+    id: 'demo_credit',
     level: 'all',
 });
 
