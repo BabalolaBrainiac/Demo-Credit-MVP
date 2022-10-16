@@ -24,7 +24,6 @@ export const TransactionRepository = {
             .first();
     },
 
-
     getAllTransactions() {
         return db('demo_transactions')
             .from('demo_transactions')
@@ -54,6 +53,25 @@ export const TransactionRepository = {
             accountNumber: item.accountNumber,
             recipientId: item.recipientId
         })
+    },
+
+    createTransactionWithParam(transactionId: any, status: any, type: any, walletId: any, userId: any, fees: any,
+            value: any, denomination: any, bankId:  any, isInternal: any, accountNumber: any, recipientId: any) {
+        return db('demo_transactions').insert({
+            transactionId: uuid(),
+            status: status,
+            type: type,
+            userId: userId,
+            walletId: walletId,
+            fees: fees,
+            value: value,
+            denomination: denomination,
+            bankId: bankId,
+            isInternal: isInternal,
+            accountNumber: accountNumber,
+            recipientId: recipientId
+        })
+
     }
 
 

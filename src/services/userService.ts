@@ -19,15 +19,23 @@ export const UserService = {
         }
     },
 
-    async getUserById(userId: any ): Promise<any> {
+     getUserById(userId: any ) {
         try {
-            return await UserRepository.getSingleItemById(userId)
+            return UserRepository.getSingleItemById(userId)
             }
         catch (e) {
             throw e
         }
     },
 
+    async getUserByEmail(email: any ): Promise<any> {
+        try {
+            return await UserRepository.getSingleItemByEmail(email)
+        }
+        catch (e) {
+            throw e
+        }
+    },
 
     async updateUser(userId: any, item: any ): Promise<any> {
         const {param, value} = item;

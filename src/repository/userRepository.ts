@@ -26,7 +26,7 @@ export const UserRepository = {
 
     },
 
-     getSingleItemById(id: string) {
+      getSingleItemById(id: string) {
 
         return db('demo_users').select('*')
             .from('demo_users')

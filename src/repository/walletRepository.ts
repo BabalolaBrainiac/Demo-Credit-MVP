@@ -8,7 +8,7 @@ export const WalletRepository = {
 
     async deleteWallet(id: any): Promise<any> {
         db('demo_wallets')
-            .where('userId', id)
+            .where('walletId', id)
             .del()
     },
 
@@ -39,9 +39,20 @@ export const WalletRepository = {
             userId: item.userId,
             balance: 0,
             type: item.type,
-            created: item.created,
         })
+    },
+
+    getWalletByUserId(id: string) {
+
+        return db('demo_wallets').select('*')
+            .from('demo_wallets')
+            .where('userId', id).limit(1)
+    },
+
+
+    getWalletBalance(walletId: any) {
+        return db('demo_wallets').select('balance')
+            .from('demo_wallets')
+            .where('walletId', walletId).limit(1)
     }
-
-
 }

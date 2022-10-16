@@ -2,6 +2,7 @@ import {UserService} from "../services/userService";
 import {IExpressRequest, IResponse} from "../interfaces/IExpressReq";
 import {HandleErrorResponse, HandleSuccessResponse} from "../helpers/handlers";
 import {UserRepository} from "../repository/userRepository";
+import {ErrorCode} from "../helpers/ErrorCodes";
 
 export const UserController = {
 
@@ -36,7 +37,8 @@ export const UserController = {
 
     async getSingleUser(req: IExpressRequest, res: IResponse): Promise<any> {
         const {userId} = req.params;
-        await UserService.getUserById(userId).then((response) => {
+         await UserService.getUserById(userId).then((response) => {
+             if(!response) throw new Error(ErrorCode.NOT_FOUND)
             res.status(200).json({
                 message: "User Successfully Fetched",
                 response
@@ -48,6 +50,7 @@ export const UserController = {
             })
         })
     },
+
 
     async updateUserInfo(req: IExpressRequest, res: IResponse): Promise<any> {
         const {item} = <any>req.body
