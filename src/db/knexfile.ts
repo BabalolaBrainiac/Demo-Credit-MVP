@@ -1,4 +1,6 @@
+require('dotenv').config();
 import type { Knex } from "knex";
+import {connectionOpts} from "../config/config";
 
 interface IKnexConfig {
   [key:string]: Knex.Config;
@@ -8,11 +10,11 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'mysql2',
     connection: {
-      host: process.env.MYSQL_HOST,
-      port: Number(process.env.MYSQL_PORT),
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DB,
+      host: connectionOpts.host,
+      port: connectionOpts.port,
+      user: connectionOpts.username,
+      password: connectionOpts.password,
+      database: connectionOpts.database,
       pool: {min: 0, max: 7}
     },
     debug: true,
@@ -53,5 +55,4 @@ const config: { [key: string]: Knex.Config } = {
 
 };
 
-module.exports = config;
 export default config;
