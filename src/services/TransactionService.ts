@@ -7,6 +7,7 @@ import {Logger} from "../utils/Logger/Logger";
 import {uuid} from "uuidv4";
 import {Errors} from "../helpers/Errors";
 import {RecipientService} from "./RecipientService";
+import {constants} from "os";
 
 export const TransactionService = {
   async createNewTransaction(transaction: any): Promise<any> {
@@ -60,27 +61,26 @@ export const TransactionService = {
   },
 
   async sendFundsToInternalUser(
+      userId: string,
     transaction: any,
-    userId: string
+    recipientItem: any
   ) {
     try {
-      let newTx = await this.prepareWithdrawal(userId, transaction);
-      if (!newTx) throw new Error(ErrorCode.BAD_REQUEST);
+      let newTx: any = await this.prepareWithdrawal(userId, transaction);
+      if (newTx.newRef && newTx.recipientId && newTx.userWalletId) {
+        await RecipientService.prepareRecipient(recipientItem, newTx, true).then( async () => {
+           // console.log(`Credit ${await WalletService.debitWallet(newTx.userWalletId, newTx.value)}`)
+        });
+      }
 
-      await RecipientService.prepareRecipient(recipientItem, newTx, true).then(() => {
-          const withdraw = WalletService.debitWallet(newTx.walletId, newTx.value)
-      })
+      throw new Errors(ErrorCode.NOT_FOUND, 'Could not send funds to user')
 
-      // const {newTx, newRec} = await Promise.all([
-      //     await this.prepareWithdrawal(userId, transaction),
-      //     await RecipientService.prepareRecipient(recipient, transaction)
-      //
-      // ])
-    } catch (err) {}
+    } catch (err: any) {
+      throw new Errors(ErrorCode.BAD_REQUEST, err.message)
+    }
   },
   async prepareWithdrawal(userId: any, transaction: any) {
     //check if user is our user
-
     try {
       let user = await UserService.getUserById(userId);
       if (!user) {
@@ -88,39 +88,45 @@ export const TransactionService = {
       }
 
       let walletBalance = await this.getWalletBalance(user.walletId);
-
       if (walletBalance[0].balance < transaction.value) {
         throw new Errors(
-          ErrorCode.BAD_REQUEST,
-          "You have insufficient funds to perform this operation"
+            ErrorCode.BAD_REQUEST,
+            "You have insufficient funds to perform this operation"
         );
       }
 
-      let tx: any = await this.createTransactionWithParam(
-        uuid(),
-        TransactionStatus.PENDING,
-        TransactionType.WITHDRAW,
-        userId,
-        user.walletId,
-        0,
-        transaction.value,
-        "NGN",
-        transaction.bankId || null,
-        transaction.isInternal || false,
-        transaction.accountNumber || null,
-        uuid()
-      );
-      if (!tx)
-        throw new Errors(ErrorCode.BAD_REQUEST, "Could not prepare withdrawal");
-
-      return tx;
+      if (user && walletBalance[0].balance > transaction.value) {
+        const txReference = uuid();
+        const recipientId = uuid()
+         await this.createTransactionWithParam(
+            txReference,
+            TransactionStatus.PENDING,
+            TransactionType.WITHDRAW,
+            user.walletId,
+            userId,
+            0,
+            transaction.value,
+            "NGN",
+            transaction.bankId || null,
+            transaction.isInternal || false,
+            transaction.accountNumber || null,
+            recipientId
+        ).then((tx) => {
+          return {
+            tx
+          }
+        })
+        return {
+          newRef: txReference,
+          recipientId: recipientId,
+          userWalletId: user.walletId,
+          value: transaction.value
+        }
+      }
     } catch (err: any) {
       Logger.Error(
-        "Unable to Prepare Withdrawal",
-        err.response?.data?.message || err.message,
-        err.stack
-      );
-      return err;
+          "Unable to Prepare Withdrawal", err);
+      return err
     }
   },
 

@@ -99,4 +99,24 @@ export const WalletController = {
         })
     },
 
+
+    async debitWallet(req: IExpressRequest, res: IResponse ) {
+        const {walletId} = req.params
+        const value = req.body.value
+
+        await WalletService.creditWallet(walletId, value).then((response) => {
+            res.status(200).json({
+                message: "Wallet debited successfully",
+                response
+            })
+        }).catch((err) => {
+            res.status(500).json({
+                message: 'Could Not debit wallet',
+                err
+            })
+        })
+    },
+
+
+
 }

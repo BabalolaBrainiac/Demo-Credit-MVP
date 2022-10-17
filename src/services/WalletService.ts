@@ -60,31 +60,29 @@ export const WalletService = {
     },
 
     async debitWallet(walletId: any, value: any) {
-            let debitWallet = await this.getWalletBalance(walletId).then((balance: any) => {
-                if (balance < value) {
-                    throw new Error('Insufficient funds')
-                }
+        let balance: any = await WalletRepository.getWalletBalance(walletId);
+        let newBal = balance[0].balance - value;
+        console.log(`Debit ${newBal}`);
 
-                let newBal = value - balance;
-                return this.updateWallet(walletId, {balance: 'balance', debit: newBal});
-            }).catch((err) => {
-                return err;
-            });
+        return this.updateWallet(walletId, {param: 'balance', value: newBal});
+
     },
 
     async creditWallet(walletId: any, value: any) {
-        let creditWallet = await this.getWalletBalance(walletId).then((balance: any) => {
-            let newBal = value + balance;
-            return this.updateWallet(walletId, {balance: 'balance', debit: newBal});
-        }).catch((err) => {
-            return err;
-        });
+        let balance: any = await WalletRepository.getWalletBalance(walletId);
+        console.log(balance)
+            let newBal = balance[0].balance + value;
+
+        console.log(`Credit ${newBal}`);
+
+            // return await this.updateWallet(walletId, {param: 'balance', value: newBal});
+
     },
 
     async updateWallet(walletId: any, item: any ): Promise<any> {
         const {param, value} = item;
         try {
-            return await UserRepository.updateItem(walletId, param, value)
+            return await WalletRepository.updateWallet(walletId, param, value)
         }
         catch (e) {
             throw e

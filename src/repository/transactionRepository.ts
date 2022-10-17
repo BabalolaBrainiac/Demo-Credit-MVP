@@ -61,8 +61,8 @@ export const TransactionRepository = {
             transactionId: uuid(),
             status: status,
             type: type,
-            userId: userId,
             walletId: walletId,
+            userId: userId,
             fees: fees,
             value: value,
             denomination: denomination,
@@ -70,6 +70,8 @@ export const TransactionRepository = {
             isInternal: isInternal,
             accountNumber: accountNumber,
             recipientId: recipientId
+        }).then((tx) => {
+            return tx
         })
 
     }

@@ -82,15 +82,17 @@ export const TransactionController = {
 
     async test(req: IExpressRequest, res: IResponse ): Promise<any> {
         const {userId} = req.params
-        const {transaction} = req.body
-        await TransactionService.sendFundsToInternalUser( transaction, userId ).then((response: any) => {
-            if(!response) throw new Error(ErrorCode.NOT_FOUND)
+        const {transaction, recipient} = req.body
+        await TransactionService.sendFundsToInternalUser( userId, transaction , recipient).then((response: any) => {
             res.status(200).json({
+                message: "Prepared withdrawal",
                 response
             })
         }).catch((err) => {
             res.status(500).json({
+                message: 'Could Not prepare withdrawal',
                 err
+
             })
         })
     },
