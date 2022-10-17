@@ -47,17 +47,17 @@ export const RecipientRepository = {
         })
     },
 
-    createRecipientWithParams(recipientId: any, firstName: any, lastName: any, isUser: boolean, bankId?: any, bankName?: any, accountName?: any,
-                              walletId?: any, accountNumber?: any) {
+    createRecipientWithParams(recipientId: any, firstName: any, lastName: any, isUser: boolean, walletId?: any, bankId?: any,  bankName?: any, accountName?: any,
+                               accountNumber?: any) {
         return db('demo_recipients').insert({
             recipientId: recipientId,
             firstName: firstName,
             lastName: lastName,
+            isUser: isUser,
+            walletId: walletId,
             bankId: bankId,
             bankName: bankName,
             accountName: accountName,
-            isUser: isUser,
-            walletId: uuid(),
             accountNumber: accountNumber
         })
     }

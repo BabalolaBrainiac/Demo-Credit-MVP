@@ -28,7 +28,7 @@ export const UserService = {
         }
     },
 
-    async getUserByEmail(email: any ): Promise<any> {
+    async getUserByEmail(email: any ) {
         try {
             return await UserRepository.getSingleItemByEmail(email)
         }

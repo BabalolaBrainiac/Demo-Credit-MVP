@@ -22,6 +22,8 @@ router.put('/delete/:walletId',
 router.get('/balance/:walletId',
     WalletController.getWalletBalance )
 
+router.put('/debit/:walletId',
+    WalletController.debitWallet )
 
 export default router;
 

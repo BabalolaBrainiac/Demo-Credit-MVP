@@ -2,6 +2,8 @@ import {RecipientRepository} from "../repository/recipientRepository";
 import {uuid} from "uuidv4";
 import {UserService} from "./userService";
 import {ErrorCode} from "../helpers/ErrorCodes";
+import {Errors} from "../helpers/Errors";
+import {WalletService} from "./WalletService";
 
 export const RecipientService = {
 
@@ -27,21 +29,24 @@ export const RecipientService = {
     },
 
 
-    async prepareRecipient(item: any, transaction: any, isInternal: boolean) {
-        const {firstName, lastName, email, accountName, accountNumber} = item;
-
-        let recipientData: any = {firstName, lastName, email, accountName, accountNumber};
+    async prepareRecipient(recipientData: any, transaction: any, isInternal: boolean) {
+        const {firstName, lastName, email, accountName, accountNumber} = recipientData;
+        const { recipientId, value } = transaction;
 
         if (isInternal) {
-            const user = await UserService.getUserByEmail(recipientData.email);
-            if (!user) throw new Error('This email does not belong to any user')
+            const user: any = await UserService.getUserByEmail(email);
+            if (!user)  {
+                throw new Errors(ErrorCode.NOT_FOUND, "Recipient is not a user");
+            }
 
-            Object.assign(recipientData.walletId, user.walletId);
+            //  WalletService.creditWallet(user.walletId, value).then((t) => {
+            //     console.log(t)
+            // })
+              await RecipientRepository.createRecipientWithParams(recipientId, firstName,
+                lastName, isInternal, user.walletId).then(async () => {
+                  await WalletService.creditWallet(user.walletId, value)
+              })
         }
-             await RecipientRepository.createRecipientWithParams(uuid(), recipientData.firstName,
-                recipientData.lastName, isInternal, transaction.walletId).then((recipient) => {
-                    return recipient;
-            })
     },
 
     async getAllRecipients(): Promise<any> {
