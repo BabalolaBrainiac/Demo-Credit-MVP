@@ -1,13 +1,12 @@
-import {TransactionRepository} from "../repository/transactionRepository";
-import {TransactionStatus, TransactionType} from "../interfaces/ITransaction";
-import {UserService} from "./userService";
-import {ErrorCode} from "../helpers/ErrorCodes";
-import {WalletService} from "./WalletService";
-import {Logger} from "../utils/Logger/Logger";
-import {uuid} from "uuidv4";
-import {Errors} from "../helpers/Errors";
-import {RecipientService} from "./RecipientService";
-import {constants} from "os";
+import { TransactionRepository } from "../repository/transactionRepository";
+import { TransactionStatus, TransactionType } from "../interfaces/ITransaction";
+import { UserService } from "./userService";
+import { ErrorCode } from "../helpers/ErrorCodes";
+import { WalletService } from "./WalletService";
+import { Logger } from "../utils/Logger/Logger";
+import { uuid } from "uuidv4";
+import { Errors } from "../helpers/Errors";
+import { RecipientService } from "./RecipientService";
 
 export const TransactionService = {
   async createNewTransaction(transaction: any): Promise<any> {
@@ -61,22 +60,23 @@ export const TransactionService = {
   },
 
   async sendFundsToInternalUser(
-      userId: string,
+    userId: string,
     transaction: any,
     recipientItem: any
   ) {
     try {
-      let newTx: any = await this.prepareWithdrawal(userId, transaction);
+      let newTx = await this.prepareWithdrawal(userId, transaction);
       if (newTx.newRef && newTx.recipientId && newTx.userWalletId) {
-        await RecipientService.prepareRecipient(recipientItem, newTx, true).then( async () => {
-           // console.log(`Credit ${await WalletService.debitWallet(newTx.userWalletId, newTx.value)}`)
+        await RecipientService.prepareRecipient(
+          recipientItem,
+          newTx,
+          true
+        ).then((recipient) => {
+          return WalletService.debitWallet(newTx.userWalletId, newTx.value)
         });
       }
-
-      throw new Errors(ErrorCode.NOT_FOUND, 'Could not send funds to user')
-
     } catch (err: any) {
-      throw new Errors(ErrorCode.BAD_REQUEST, err.message)
+      throw new Errors(ErrorCode.BAD_REQUEST, err.message);
     }
   },
   async prepareWithdrawal(userId: any, transaction: any) {
@@ -90,43 +90,42 @@ export const TransactionService = {
       let walletBalance = await this.getWalletBalance(user.walletId);
       if (walletBalance[0].balance < transaction.value) {
         throw new Errors(
-            ErrorCode.BAD_REQUEST,
-            "You have insufficient funds to perform this operation"
+          ErrorCode.BAD_REQUEST,
+          "You have insufficient funds to perform this operation"
         );
       }
 
       if (user && walletBalance[0].balance > transaction.value) {
         const txReference = uuid();
-        const recipientId = uuid()
-         await this.createTransactionWithParam(
-            txReference,
-            TransactionStatus.PENDING,
-            TransactionType.WITHDRAW,
-            user.walletId,
-            userId,
-            0,
-            transaction.value,
-            "NGN",
-            transaction.bankId || null,
-            transaction.isInternal || false,
-            transaction.accountNumber || null,
-            recipientId
+        const recipientId = uuid();
+        await this.createTransactionWithParam(
+          txReference,
+          TransactionStatus.PENDING,
+          TransactionType.WITHDRAW,
+          user.walletId,
+          userId,
+          0,
+          transaction.value,
+          "NGN",
+          transaction.bankId || null,
+          transaction.isInternal || false,
+          transaction.accountNumber || null,
+          recipientId
         ).then((tx) => {
           return {
-            tx
-          }
-        })
+            tx,
+          };
+        });
         return {
           newRef: txReference,
           recipientId: recipientId,
           userWalletId: user.walletId,
-          value: transaction.value
-        }
+          value: transaction.value,
+        };
       }
     } catch (err: any) {
-      Logger.Error(
-          "Unable to Prepare Withdrawal", err);
-      return err
+      Logger.Error("Unable to Prepare Withdrawal", err);
+      return err;
     }
   },
 

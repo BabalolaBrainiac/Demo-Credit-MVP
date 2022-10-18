@@ -1,5 +1,4 @@
 import db from '../db/dbQueryRunner'
-import {CrudRepository} from "./CrudRepository";
 import {uuid} from "uuidv4";
 
 
