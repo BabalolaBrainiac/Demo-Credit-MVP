@@ -9,4 +9,8 @@ export const connectionOpts = {
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DB,
 };
-//
+
+export const Keys = {
+    JWT_TOKEN: process.env.JWT_SECRET,
+    JWT_REFRESH_SECRET: process.env.JWT_TOKEN_REFRESH_SECRET
+}

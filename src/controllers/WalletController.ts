@@ -124,6 +124,7 @@ export const WalletController = {
       });
   },
 
+
   async creditWallet(req: IExpressRequest, res: IResponse) {
     const { walletId } = req.params;
     const value = req.body.value;

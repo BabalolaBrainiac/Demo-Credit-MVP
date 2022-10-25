@@ -2,6 +2,8 @@ import {body, validationResult} from 'express-validator';
 import {NextFunction, Request, Response} from 'express';
 import {ContextRunner} from 'express-validator/src/chain';
 import {ErrorCode} from './ErrorCodes';
+import {UserService} from "../services/userService";
+import {Errors} from "./Errors";
 
 /**
  * Uniform handling of express validators
@@ -78,3 +80,12 @@ export const fieldValidator = () => {
             .escape(),
     ]);
 };
+
+export const userExists = async (email: any) => {
+    await UserService.getUserByEmail(email).then((user) => {
+        if (user) {
+            throw new Errors(ErrorCode.BAD_REQUEST, 'User with this email already exist')
+        }
+        return new Errors(ErrorCode.BAD_REQUEST, 'User with this email already exist')
+    })
+}

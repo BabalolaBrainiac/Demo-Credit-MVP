@@ -1,23 +1,28 @@
 import {UserService} from "../services/userService";
 import {IExpressRequest, IResponse} from "../interfaces/IExpressReq";
-import {HandleErrorResponse, HandleSuccessResponse} from "../helpers/handlers";
-import {UserRepository} from "../repository/userRepository";
 import {ErrorCode} from "../helpers/ErrorCodes";
+import {NextFunction} from "express";
 
 export const UserController = {
 
-    async createNewUser(req: IExpressRequest, res: IResponse): Promise<any> {
-        const { user } =<any> req.body
-            await UserService.createNewUser(user).then((response) => {
-                res.status(200).json({
-                    message: "User Successfully Added",
-                    response
+    async createNewUser(req: IExpressRequest, res: IResponse, next: NextFunction): Promise<any> {
+            const { user } =<any> req.body
+                await UserService.createNewUser(user).then((response) => {
+                    res.status(200).json({
+                        message: "User Successfully Added",
+                        response
+                    })
+                }).catch((err) => {
+                    if (err.code == 'ER_DUP_ENTRY') {
+                       res.status(500).json({
+                           message: 'Email is already registered to a user',
+                       })
+                    }
+                    res.status(500).json({
+                        message: 'Could not add User',
+                        err
+                    })
                 })
-            }).catch((err) => {
-                res.status(500).json({
-                    message: 'Coulr not add User'
-                })
-            })
     },
 
     async getAllUsers(req: IExpressRequest, res: IResponse): Promise<any> {
@@ -83,5 +88,20 @@ export const UserController = {
             })
         })
     },
+
+    async login(req: IExpressRequest, res: IResponse, next: NextFunction) {
+        const {user} = req.body;
+
+        await UserService.loginUser(user).then((response) => {
+            res.status(200).json({
+                message: "Login Successful",
+                response
+            })
+        }).catch((err) => {
+            res.status(500).json({
+                message: 'Login Not Successful'
+            })
+        })
+    }
 
 }
