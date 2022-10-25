@@ -8,6 +8,7 @@ export class IUserDto {
     walletId: string;
     email!: string;
     phoneNumber!: string;
+    demo_users_pass!: string;
     isVerified!: boolean;
     dob!: string;
     bonusPoints!: number;
