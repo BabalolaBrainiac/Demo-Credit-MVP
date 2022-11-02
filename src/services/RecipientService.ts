@@ -3,6 +3,7 @@ import { UserService } from "./userService";
 import { ErrorCode } from "../helpers/ErrorCodes";
 import { Errors } from "../helpers/Errors";
 import { WalletService } from "./WalletService";
+import { TransactionService } from "./TransactionService";
 
 export const RecipientService = {
   async createRecipient(recipient: any): Promise<any> {
@@ -41,7 +42,7 @@ export const RecipientService = {
     }
   },
 
-  async prepareRecipient(
+  async prepareInternalRecipient(
     recipientData: any,
     transaction: any,
     isInternal: boolean
@@ -63,6 +64,24 @@ export const RecipientService = {
       );
     }
     return await WalletService.creditExtWallet(user.walletId, value);
+  },
+
+  async prepareExternalRecipient(recipientData: any) {
+    const { bankId, number, recipientId } = recipientData;
+    let validatedAccount: any =
+      await TransactionService.validateExternalAccount(bankId, number);
+    if (!validatedAccount)
+      throw new Errors(ErrorCode.NOT_FOUND, "Could not Validate Bank Account");
+    const { firstName, lastName, accountNumber, bank, bankCode } =
+      validatedAccount;
+
+    await RecipientRepository.createRecipientWithParams(
+      recipientId,
+      firstName,
+      lastName,
+      false,
+      accountNumber
+    );
   },
 
   async getAllRecipients(): Promise<any> {

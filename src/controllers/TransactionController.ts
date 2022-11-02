@@ -110,7 +110,7 @@ export const TransactionController = {
   async test(req: IExpressRequest, res: IResponse): Promise<any> {
     const { userId } = req.params;
     const { transaction, recipient } = req.body;
-    await TransactionService.sendFundsToInternalUser(
+    await TransactionService.withdrawToInternalUser(
       userId,
       transaction,
       recipient

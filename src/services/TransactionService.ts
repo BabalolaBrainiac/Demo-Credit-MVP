@@ -7,6 +7,7 @@ import { Logger } from "../utils/Logger/Logger";
 import { uuid } from "uuidv4";
 import { Errors } from "../helpers/Errors";
 import { RecipientService } from "./RecipientService";
+import { KudaProcessor } from "../processor/WithdrawalProcessor";
 
 export const TransactionService = {
   async createNewTransaction(transaction: any): Promise<any> {
@@ -62,7 +63,7 @@ export const TransactionService = {
     }
   },
 
-  async sendFundsToInternalUser(
+  async withdrawToInternalUser(
     userId: string,
     transaction: any,
     recipientItem: any
@@ -70,12 +71,12 @@ export const TransactionService = {
     try {
       let newTx = await this.prepareWithdrawal(userId, transaction);
       if (newTx.newRef && newTx.recipientId && newTx.userWalletId) {
-        await RecipientService.prepareRecipient(
+        await RecipientService.prepareInternalRecipient(
           recipientItem,
           newTx,
           true
         ).then((recipient) => {
-          return WalletService.debitWallet(newTx.userWalletId, newTx.value)
+          return WalletService.debitWallet(newTx.userWalletId, newTx.value);
         });
       }
     } catch (err: any) {
@@ -161,6 +162,45 @@ export const TransactionService = {
         accountNumber,
         recipientId
       );
+    } catch (err) {
+      return err;
+    }
+  },
+
+  async withdrawToExternalAccount(userId: string, transaction: any) {
+    try {
+      let newTx = await RecipientService.prepareExternalRecipient(transaction);
+      console.log(newTx);
+      //To be continued
+    } catch (err: any) {
+      throw new Errors(ErrorCode.BAD_REQUEST, err.message);
+    }
+  },
+
+  async validateExternalAccount(bankId: string, accountNumber: string) {
+    try {
+      const kuda = new KudaProcessor();
+      let validatedAccount = await kuda.lookupAccount(bankId, accountNumber);
+      if (!validatedAccount) {
+        return new Errors(
+          ErrorCode.NOT_FOUND,
+          "Could not validate bank account"
+        );
+      }
+      return validatedAccount;
+    } catch (err) {
+      return err;
+    }
+  },
+
+  async listBanks() {
+    try {
+      const kuda = new KudaProcessor();
+      let banks = await kuda.getBankList();
+      if (!banks) {
+        return new Errors(ErrorCode.NOT_FOUND, "Could not get bank list");
+      }
+      return banks;
     } catch (err) {
       return err;
     }
