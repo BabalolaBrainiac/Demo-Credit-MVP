@@ -18,7 +18,7 @@ export async function seed(knex: Knex): Promise<void> {
             phoneNumber: '+23490000000000',
             dob: '2022-10-12',
             walletId: uuid(),
-            email:'test@email.com',
+            email:'withdrawToInternal@email.com',
 
         },
         {

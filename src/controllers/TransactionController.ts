@@ -107,7 +107,7 @@ export const TransactionController = {
       });
   },
 
-  async test(req: IExpressRequest, res: IResponse): Promise<any> {
+  async withdrawToInternal(req: IExpressRequest, res: IResponse): Promise<any> {
     const { userId } = req.params;
     const { transaction, recipient } = req.body;
     await TransactionService.withdrawToInternalUser(
@@ -116,11 +116,10 @@ export const TransactionController = {
       recipient
     )
       .then((response: any) => {
-        res.send(response)
-        // res.status(200).json({
-        //   message: "Funds Successfully Sent",
-        //   response,
-        // });
+        res.send({
+          message: 'Withdrawal Processed Successfully',
+          response
+        })
       })
       .catch((err) => {
         res.status(500).json({
@@ -129,4 +128,40 @@ export const TransactionController = {
         });
       });
   },
+
+  async withdrawToExternalAccount(req: IExpressRequest, res: IResponse): Promise<any> {
+    //To Be Implemented
+  },
+
+  async validateExternalBankAccount(req: IExpressRequest, res: IResponse) {
+    let {bankId, accountNumber} = req.body;
+
+    await TransactionService.validateExternalAccount(bankId, accountNumber).then((bank) => {
+      res.send({
+        message: 'bank account validated',
+        data: bank
+      })
+    })
+        .catch((err) => {
+          res.status(500).json({
+            message: "Could Not prepare withdrawal",
+            err,
+          });
+        });
+  },
+
+  async listBanks(req: IExpressRequest, res: IResponse) {
+    await TransactionService.listBanks().then((banks) => {
+      res.send({
+        data: banks,
+        message: 'bank list retrieved'
+      })
+    })
+        .catch((err) => {
+          res.status(500).json({
+            message: "Could Not prepare withdrawal",
+            err,
+          });
+        });
+  }
 };

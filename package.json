@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.ts",
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "withdrawToInternal": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/config/default.ts",
     "knex": "./node_modules/.bin/knex --knexfile src/db/knexfile.ts"
   },
