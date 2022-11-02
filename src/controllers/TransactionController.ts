@@ -1,8 +1,14 @@
 import { TransactionService } from "../services/TransactionService";
 import { IExpressRequest, IResponse } from "../interfaces/IExpressReq";
+import {validationResult} from "express-validator";
 
 export const TransactionController = {
   async createTransaction(req: IExpressRequest, res: IResponse): Promise<any> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
+    }
+
     const { user } = <any>req.body;
     await TransactionService.createNewTransaction(user)
       .then((response) => {
@@ -34,6 +40,11 @@ export const TransactionController = {
   },
 
   async getTransaction(req: IExpressRequest, res: IResponse): Promise<any> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
+    }
+
     const { transactionId } = req.params;
     await TransactionService.getAllTransactionById(transactionId)
       .then((response) => {
@@ -51,6 +62,11 @@ export const TransactionController = {
   },
 
   async updateTransaction(req: IExpressRequest, res: IResponse): Promise<any> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
+    }
+
     const { item } = <any>req.body;
     const { transactionId } = req.params;
 
@@ -70,6 +86,11 @@ export const TransactionController = {
   },
 
   async deleteTransaction(req: IExpressRequest, res: IResponse) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
+    }
+
     const { transactionId } = req.params;
 
     await TransactionService.deleteTransaction(transactionId)
@@ -95,10 +116,11 @@ export const TransactionController = {
       recipient
     )
       .then((response: any) => {
-        res.status(200).json({
-          message: "Funds Successfully Sent",
-          response,
-        });
+        res.send(response)
+        // res.status(200).json({
+        //   message: "Funds Successfully Sent",
+        //   response,
+        // });
       })
       .catch((err) => {
         res.status(500).json({

@@ -33,7 +33,7 @@ export const UserRepository = {
   },
 
   async createNewItem(item: any) {
-    let user = await PrepareUser(item);
+    let { user, token }: any = await PrepareUser(item);
 
     return db("demo_users").insert({
       userId: user.userId,
@@ -45,8 +45,8 @@ export const UserRepository = {
       demo_users_pass: user.password,
       dob: user.dob,
       walletId: uuid(),
-        created_at: new Date(),
-        updated_at: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
       bonusPoints: user.bonusPoints,
     });
   },

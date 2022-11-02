@@ -56,7 +56,10 @@ export const TransactionService = {
   async getWalletBalance(walletId: string) {
     try {
       return await WalletService.getWalletBalance(walletId);
-    } catch (err) {}
+    } catch (err) {
+      Logger.Error(err);
+      return new Errors(ErrorCode.REQUEST_FAILED, "Could not get balance");
+    }
   },
 
   async sendFundsToInternalUser(
