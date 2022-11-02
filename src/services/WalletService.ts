@@ -1,19 +1,18 @@
-import { WalletRepository } from "../repository/walletRepository";
-import { UserRepository } from "../repository/userRepository";
-import { Logger } from "../utils/Logger/Logger";
-import { ErrorCode } from "../helpers/ErrorCodes";
+import {WalletRepository} from "../repository/walletRepository";
+import {UserRepository} from "../repository/userRepository";
+import {Logger} from "../utils/Logger/Logger";
+import {ErrorCode} from "../helpers/ErrorCodes";
 
 export const WalletService = {
   async createWallet(user: any): Promise<any> {
     try {
       await this.validateWallet(user.userId);
-      let newWallet = WalletRepository.createWallet(user).then((wallet) => {
+      return WalletRepository.createWallet(user).then((wallet) => {
         return {
           message: "Wallet Added",
           wallet,
         };
       });
-      return newWallet;
     } catch (err) {
       Logger.Error(ErrorCode.BAD_REQUEST, err);
     }
@@ -44,12 +43,11 @@ export const WalletService = {
   },
 
   async getWalletBalance(walletId: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let wallet = WalletRepository.getWalletBalance(walletId);
-      console.log(resolve(wallet));
-    }).catch((err) => {
-      Logger.Error(ErrorCode.BAD_REQUEST, err);
-    });
+    try {
+      return WalletRepository.getWalletBalance(walletId);
+    } catch(err) {
+      throw err
+    }
   },
 
   async debitWallet(walletId: any, value: any) {

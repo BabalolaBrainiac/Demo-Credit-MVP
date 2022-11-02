@@ -37,11 +37,10 @@ export const isSuccessfulStatus = (code: Number): boolean => {
  * @param {Response} res Express response handler
  * @returns {Response}
  */
-export const HandleErrorResponse = (err: any): IExpressResponse => {
+export const HandleErrorResponse = (err: any): { data: any; status: any } => {
     const { message, code } = err;
 
-    if (code === ErrorCode.SERVER_ERROR || code === undefined) {
-
+    if (!code) {
         return {
             status: 500,
             data: {
@@ -52,27 +51,26 @@ export const HandleErrorResponse = (err: any): IExpressResponse => {
         };
     }
 
-    if (err) {
-        return {
-            status: 500,
-            data: {
-                code: ErrorCode.SERVER_ERROR,
-                message: 'An unexpected internal server error occurred',
-                data: err.stack,
-            },
-        };
-    }
+    // if (err) {
+    //     return {
+    //         status: 500,
+    //         data: {
+    //             code: ErrorCode.SERVER_ERROR,
+    //             message: 'An unexpected internal server error occurred',
+    //             data: err.stack,
+    //         },
+    //     };
+    // }
     switch (code) {
-        case ErrorCode.NOT_AVAILABLE:
-        case ErrorCode.NOT_FOUND:
+        case 401:
             return {
-                status: 403,
+                status: ErrorCode.UNAUTHORIZED,
                 data: {
                     ...err,
-                    message: message || 'Unauthorized endpoint access',
+                    message: message || 'You are not authorized to access this endpoint',
                 },
             };
-        case ErrorCode.BAD_REQUEST:
+        case 400:
             return {
                 status: 400,
                 data: {
@@ -80,16 +78,21 @@ export const HandleErrorResponse = (err: any): IExpressResponse => {
                     message: message || 'Some important parameters are missing. See documentation',
                 },
             };
-        case ErrorCode.SERVER_ERROR:
-        case ErrorCode.REQUEST_FAILED:
+        case 500:
             return {
                 status: 500,
-                data: err,
+                data: {
+                    ...err,
+                    message: 'An unexpected error has occurred, kindly check the documentation'
+                },
             };
         case ErrorCode.NOT_FOUND:
             return {
                 status: 404,
-                data: err,
+                data: {
+                    ...err,
+                    message: 'The resource you are looking for does not exist'
+                },
             };
         default:
             return {

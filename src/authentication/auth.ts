@@ -1,26 +1,28 @@
-import {IExpressRequest, IResponse} from "../interfaces/IExpressReq";
-import {NextFunction} from "express";
-import {ErrorCode} from "../helpers/ErrorCodes";
-import {Keys} from "../config/config";
+import { IExpressRequest, IResponse } from "../interfaces/IExpressReq";
+import { NextFunction } from "express";
+import {Base64} from "js-base64";
+import { ErrorCode } from "../helpers/ErrorCodes";
+import { Keys } from "../config/config";
 import jwt from "jsonwebtoken";
-import {Errors} from "../helpers/Errors";
+import { Errors } from "../helpers/Errors";
 
+export const validateToken = async (req: any, res: IResponse, next: NextFunction) => {
+  let authHeaders = req.headers["authorization"];
 
-export const authenticateToken = (req: any, res: IResponse, next: NextFunction) => {
-    let authHeaders = req.headers['authorization'];
+  const token = authHeaders && authHeaders.split(" ")[1];
+  if (token == null)
+    return res.status(401).json({
+      code: ErrorCode.UNAUTHORIZED,
+      message: 'You are not authorized to access this resource'
+    });
 
-    const token = authHeaders && authHeaders.split(' ')[1]
-    if(token == null) return res.status(401).json({
-        message: ErrorCode.UNAUTHORIZED
-    })
+  return jwt.verify(token, Base64.decode(Keys.JWT_TOKEN as string), {algorithms: ['HS256']},(err: any, user: any) => {
+    if (err) {
+      throw new Errors(ErrorCode.UNAUTHORIZED, "Could Not Authorize User");
+    }
 
-    return jwt.verify(token, Keys.JWT_TOKEN as string, (err: any, user: any) => {
-        if (err) {
-            throw new Errors(ErrorCode.UNAUTHORIZED, 'Could Not Authorize User')
-        }
-        req.user = user
-        next()
-    })
-
-}
-
+    res.locals.jwt = user;
+    // req.user = user
+    next();
+  });
+};
