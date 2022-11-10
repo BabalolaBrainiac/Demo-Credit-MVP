@@ -158,10 +158,10 @@ export const TransactionController = {
       })
     })
         .catch((err) => {
-          res.status(500).json({
-            message: "Could Not prepare withdrawal",
+          res.send({
+            message: "Could not list available banks",
             err,
-          });
+          })
         });
   }
 };

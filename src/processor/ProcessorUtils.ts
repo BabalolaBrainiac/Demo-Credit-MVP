@@ -3,14 +3,13 @@ import { Logger } from "../../src/utils/Logger/Logger";
 
 export const KudaHelper = {
   async getAuthToken(email: any, apiKey: any): Promise<any> {
+    let authUrl = process.env.KUDA_AUTH_URL_STAGING as string;
     try {
-      const authUrl =
-        "https://kuda-openapi-uat.kudabank.com/v2/Account/GetToken";
-
       const response = await axios.post(authUrl, {
         email,
         apiKey,
       });
+      console.log(response)
       return response.data;
     } catch (err: any) {
       Logger.Error(err.data, err.stack);

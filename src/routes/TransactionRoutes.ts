@@ -59,7 +59,7 @@ router.put(
 
 router.post("/new/:userId", TransactionController.withdrawToInternal);
 
-router.get("/banks/", TransactionController.listBanks);
+router.get("/banks", TransactionController.listBanks);
 
 router.post(
   "/banks/validate",

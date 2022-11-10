@@ -29,6 +29,7 @@ export class KudaProcessor {
       Logger.Error(ErrorCode.REQUEST_FAILED);
     }
 
+    console.log(res)
     const banks = res as [];
 
     return banks.map(({ bankId, bankName }) => {
