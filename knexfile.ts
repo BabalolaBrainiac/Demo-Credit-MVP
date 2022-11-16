@@ -1,5 +1,9 @@
 import type { Knex } from "knex";
-import {connectionOpts} from "../config/config";
+require('dotenv').config();
+import {connectionOpts} from "./src/config/config";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 interface IKnexConfig {
   [key:string]: Knex.Config;

@@ -5,10 +5,10 @@ import {validateToken} from "../authentication/auth";
 
 const router: Router = express.Router();
 
-router.get("/get", UserController.getAllUsers);
+router.get("/", UserController.getAllUsers);
 
 router.get(
-  "/get/:userId",
+  "/:userId",
   validateToken,
   UserController.getSingleUser
 );
