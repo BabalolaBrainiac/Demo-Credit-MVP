@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import {has} from "config";
 
 export const passwordHash = async (password: string) => {
   try {
@@ -14,6 +15,9 @@ export const comparePassword = async (
   hashedPassword: string
 ) => {
   try {
+    if (!hashedPassword) {
+      return false
+    }
     return await bcrypt.compare(input, hashedPassword);
   } catch (err) {
     return err;

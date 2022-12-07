@@ -6,10 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const testRoutes_1 = __importDefault(require("../routes/testRoutes"));
 const userRoutes_1 = __importDefault(require("./userRoutes"));
+const TransactionRoutes_1 = __importDefault(require("./TransactionRoutes"));
+const WalletRoutes_1 = __importDefault(require("./WalletRoutes"));
 const router = express_1.default.Router();
-router.use('/', testRoutes_1.default);
-router.use('/api/users', userRoutes_1.default);
-router.use('/health', (req, res) => {
-    res.send({ status: 'OK' });
+router.use("/", testRoutes_1.default);
+router.use("/api/users", userRoutes_1.default);
+router.use("/api/transactions", TransactionRoutes_1.default);
+router.use("/api/wallets", WalletRoutes_1.default);
+router.use("/health", (req, res) => {
+    res.send({ status: "OK" });
 });
 exports.default = router;

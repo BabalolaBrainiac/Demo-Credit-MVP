@@ -7,34 +7,28 @@ import { validationResult } from "express-validator";
 export const UserController = {
   async createNewUser(
     req: IExpressRequest,
-    res: IResponse,
-    next: NextFunction
+    res: IResponse
   ): Promise<any> {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.array() });
+      res.send({
+        message: "Validation Error",
+        errors,
+      });
     }
 
     const { user } = <any>req.body;
     await UserService.createNewUser(user)
       .then((response) => {
         res.send({
+          message: "User Successfully Created",
           response,
         });
       })
       .catch((err) => {
-        if (err.code == "ER_DUP_ENTRY") {
-          res.status(500).json({
-            message: "Email is already registered to a user",
-          });
-        }
-        res.status(500).json({
-          message: "Could not add User",
-          err,
-        });
+        return err
       });
   },
-
   async getAllUsers(req: IExpressRequest, res: IResponse): Promise<any> {
     await UserService.getAllUsers()
       .then((response) => {
@@ -51,7 +45,6 @@ export const UserController = {
   },
 
   async getSingleUser(req: IExpressRequest, res: IResponse): Promise<any> {
-
     const { userId } = req.params;
     await UserService.getUserById(userId)
       .then((response) => {
@@ -72,24 +65,22 @@ export const UserController = {
   async updateUserInfo(req: IExpressRequest, res: IResponse): Promise<any> {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.array() });
+      res.send({
+        message: "Validation Error",
+        errors,
+      });
     }
-
     const { item } = <any>req.body;
-    const { userId } = req.params;
 
-    await UserService.updateUser(userId, item)
+    await UserService.updateUser(item)
       .then((response) => {
-        res.status(200).json({
+        res.send({
           message: "User Successfully Modified",
           response,
         });
       })
       .catch((err) => {
-        res.status(500).json({
-          message: "Could Not Modify User",
-          err,
-        });
+        return err;
       });
   },
 
@@ -128,10 +119,10 @@ export const UserController = {
         });
       })
       .catch((err) => {
-        res.send(err).json({
-          message: "Login Not Successful",
+        return {
+          message: "Validation Error",
           err,
-        });
+        };
       });
   },
 };

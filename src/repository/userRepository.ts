@@ -24,6 +24,7 @@ export const UserRepository = {
       .where("userId", id)
       .first();
   },
+
   getSingleItemByEmail(email: string) {
     return db("demo_users")
       .select("*")
@@ -33,16 +34,16 @@ export const UserRepository = {
   },
 
   async createNewItem(item: any) {
-    let { user, token }: any = await PrepareUser(item);
+    let { user }: any = await PrepareUser(item);
 
     return db("demo_users").insert({
       userId: user.userId,
-      firstName: user.firstName,
+      firstName: user.userId,
       lastName: user.lastName,
       email: user.email,
       userName: user.userName,
       phoneNumber: user.phoneNumber,
-      demo_users_pass: user.password,
+      password: user.password,
       dob: user.dob,
       walletId: uuid(),
       created_at: new Date(),

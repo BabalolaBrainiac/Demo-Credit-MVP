@@ -7,14 +7,8 @@ export const PrepareUser = async (user: any) => {
   try {
     user.password = await passwordHash(user.password);
     user.userId = uuid();
-    const token = assignToken(user);
 
-    console.log(user, token);
-
-    return {
-      user,
-      token,
-    };
+    return user
   } catch (err) {
     return err;
   }

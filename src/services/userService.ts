@@ -18,10 +18,13 @@ export const UserService = {
           "No user exists with this email"
         );
       }
-      let isAuth = await comparePassword(password, user.demo_users_pass);
+      let isAuth = await comparePassword(password, user.password);
       if (!isAuth) {
         Logger.Error(ErrorCode.UNAUTHORIZED);
-        return new Errors(ErrorCode.UNAUTHORIZED, "Incorrect Password");
+        return new Errors(
+          ErrorCode.UNAUTHORIZED,
+          "Kindly Enter A Valid/Correct Password"
+        );
       }
       return assignToken(user);
     } catch (err) {
@@ -32,8 +35,9 @@ export const UserService = {
 
   async createNewUser(user: IUserDto): Promise<any> {
     try {
-      let isExist = await this.getUserByEmail(user.email);
-      if (isExist) {
+      let isExist = UserRepository.getSingleItemByEmail(user.email);
+      console.log(isExist);
+      if (await isExist) {
         return new Errors(
           ErrorCode.BAD_REQUEST,
           "Email already registered to a user"
@@ -41,8 +45,8 @@ export const UserService = {
       }
       return UserRepository.createNewItem(user);
     } catch (err) {
-      console.log(err);
       Logger.Error(ErrorCode.REQUEST_FAILED, err);
+      return err;
     }
   },
 
@@ -64,14 +68,14 @@ export const UserService = {
 
   async getUserByEmail(email: any) {
     try {
-      return await UserRepository.getSingleItemByEmail(email);
+      return UserRepository.getSingleItemByEmail(email);
     } catch (e) {
       throw e;
     }
   },
 
-  async updateUser(userId: any, item: any): Promise<any> {
-    const { param, value } = item;
+  async updateUser(item: any): Promise<any> {
+    const { param, value, userId } = item;
     try {
       return await UserRepository.updateItem(userId, param, value);
     } catch (e) {

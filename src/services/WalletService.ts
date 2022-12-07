@@ -1,7 +1,7 @@
-import {WalletRepository} from "../repository/walletRepository";
-import {UserRepository} from "../repository/userRepository";
-import {Logger} from "../utils/Logger/Logger";
-import {ErrorCode} from "../helpers/ErrorCodes";
+import { WalletRepository } from "../repository/walletRepository";
+import { UserRepository } from "../repository/userRepository";
+import { Logger } from "../utils/Logger/Logger";
+import { ErrorCode } from "../helpers/ErrorCodes";
 
 export const WalletService = {
   async createWallet(user: any): Promise<any> {
@@ -45,8 +45,8 @@ export const WalletService = {
   async getWalletBalance(walletId: any): Promise<any> {
     try {
       return WalletRepository.getWalletBalance(walletId);
-    } catch(err) {
-      throw err
+    } catch (err) {
+      throw err;
     }
   },
 

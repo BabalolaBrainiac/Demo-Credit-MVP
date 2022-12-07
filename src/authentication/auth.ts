@@ -13,12 +13,12 @@ export const validateToken = async (req: any, res: IResponse, next: NextFunction
   if (token == null)
     return res.status(401).json({
       code: ErrorCode.UNAUTHORIZED,
-      message: 'You are not authorized to access this resource'
+      message: 'You Are Not Permitted to Perform This Operation'
     });
 
   return jwt.verify(token, Base64.decode(Keys.JWT_TOKEN as string), {algorithms: ['HS256']},(err: any, user: any) => {
     if (err) {
-      throw new Errors(ErrorCode.UNAUTHORIZED, "Could Not Authorize User");
+      throw new Errors(ErrorCode.UNAUTHORIZED, "Invalid Token: Could Not Authorize User");
     }
 
     res.locals.jwt = user;
