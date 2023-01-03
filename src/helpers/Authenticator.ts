@@ -1,36 +1,76 @@
 import axios from "axios";
-import {IExpressRequest} from "../interfaces/IExpressReq";
-import {NextFunction} from "express";
 
-export class Authenticator {
-    private static authUrl: string;
-    private static payload: any;
-    private static serviceId: any;
+let serviceId: any = process.env.IDEA_SERVICE_ID;
+let authUrl: any = process.env.AUTH_SERVICE_URL
+let publicKey: any = process.env.JWT_PUBLIC_KEY
 
-    constructor() {
+export const GipperAuthenticator = {
+    getServiceTokenFromAuthService: async (payload?: any) => {
 
-    }
+        try {
+            return await axios({
+                method: 'POST',
+                url: `${authUrl}/token`,
+                data: {
+                    serviceId: serviceId,
+                    payload: payload
+                }
+            });
 
-    static async getServiceTokenFromAuthService() {
-        return await axios({
-            method: 'POST',
-            url: `${this.authUrl}/token`,
-            params: {
-                payload: this.payload,
-                serviceId: this.serviceId
-            }
-        })
-    }
 
-    static async validateTokenFromAuthService(req: IExpressRequest, res: Response, next: NextFunction) {
-        const token: any = req.headers["x-auth-token"];
+        } catch (err) {
+            return err
+        }
+    },
+    async validateServiceToken(token?: any): Promise<any> {
+        try {
+            return await axios({
+                method: 'POST',
+                url: `${authUrl}/validate`,
+                headers: {
+                    "x-auth-token": token
+                },
+                data: {
+                    publicKey
+                }
+            })
 
-        return await axios({
-            method: 'POST',
-            url: `${this.authUrl}/validate`,
-            params: {
-                token: token
-            }
-        })
-    }
+        } catch (err: any) {
+            return err;
+        }
+    },
+
+    async getUserTokenFromAuthService(payload?: any): Promise<any> {
+
+        const {userId, data, user_permissions} = payload;
+        try {
+            return await axios({
+                method: 'POST',
+                url: `${authUrl}/user/token`,
+                data: {
+                    payload: payload
+                }
+            });
+        } catch (err) {
+            return err
+        }
+    },
+
+    async validateUserToken(token?: any): Promise<any> {
+        try {
+            return await axios({
+                method: 'POST',
+                url: `${authUrl}/user/token/validate`,
+                headers: {
+                    "x-auth-token": token
+                },
+                data: {
+                    publicKey
+                }
+            })
+
+        } catch (err: any) {
+            return err;
+        }
+    },
 }
