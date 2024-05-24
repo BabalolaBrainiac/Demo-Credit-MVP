@@ -5,3 +5,5 @@ node_modules/
 dist/
 .env
 env
+private.pem
+/dist/
